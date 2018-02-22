@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import CurrentWeather from './CurrentWeather';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       location: { lat: null, lon: null },
+      hasLocation: false
     };
   }
 
@@ -19,20 +21,23 @@ export default class App extends Component {
         location: {
           lat: position.coords.latitude,
           lon: position.coords.longitude
-        }
+        },
+        hasLocation: true
       });
     });
   }
 
   render() {
+    let currentWeather;
+
+    if (this.state.hasLocation) {
+      currentWeather = <CurrentWeather location={this.state.location} />;
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Lat: {this.state.location.lat}
-        </Text>
-        <Text style={styles.instructions}>
-          Lon: {this.state.location.lon}
-        </Text>
+        <Text style={styles.title}>SimpleWeather</Text>
+        {currentWeather}
       </View>
     );
   }
@@ -45,14 +50,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     paddingTop: 40
   },
-  welcome: {
-    fontSize: 20,
+  title: {
+    fontSize: 38,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
