@@ -36,7 +36,9 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>SimpleWeather</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>SimpleWeather</Text>
+        </View>
         {currentWeather}
       </View>
     );
@@ -50,9 +52,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     paddingTop: 40
   },
+  titleContainer: {
+    borderBottomColor: "#000",
+    borderBottomWidth: 1
+  },
   title: {
+    borderBottomColor: "#ccc",
+    borderBottomWidth: 10,
     fontSize: 38,
     textAlign: 'center',
-    margin: 10,
   }
 });

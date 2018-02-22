@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Config from 'react-native-config';
+import WeatherIcon from './WeatherIcon';
+import selectIcon from '../helpers/selectIcon';
 
 export default class CurrentWeather extends Component {
   getCurrentWeather() {
@@ -17,11 +19,11 @@ export default class CurrentWeather extends Component {
       .then(response => response.json())
       .then(body => {
         this.setState({
-          weatherData: body.data[0],
           city: body.data[0].city_name,
+          humidity: body.data[0].rh,
+          pod: body.data[0].pod,
           state: body.data[0].state_code,
           temp: body.data[0].temp,
-          pod: body.data[0].pod,
           weather: body.data[0].weather
         });
       })
@@ -33,17 +35,30 @@ export default class CurrentWeather extends Component {
   }
 
   render() {
-    let location, temp;
+    let location, temp, humidity, description, iconName;
 
     if (this.state !== null) {
       location = `${this.state.city}, ${this.state.state}`;
       temp = `${Math.floor(this.state.temp)}°`;
+      iconName = selectIcon(this.state.weather.code, this.state.pod);
+      description = this.state.weather.description;
+      humidity = (
+        <View style={styles.centeredRowContainer}>
+          <Text style={styles.hum}>{this.state.humidity}</Text>
+          <WeatherIcon name="wi-humidity" size={34} color="#000" style={styles.humIcon} />
+        </View>
+      );
     }
 
     return (
       <View>
         <Text style={styles.location}>{location}</Text>
-        <Text style={styles.temp}>{temp}</Text>
+        <View style={styles.centeredRowContainer}>
+          <Text style={styles.temp}>{temp}</Text>
+          <Text style={styles.description}>{description}</Text>
+          {humidity}
+        </View>
+        <WeatherIcon name={iconName} size={150} color="#000" style={styles.icon} />
       </View>
     );
   }
@@ -57,7 +72,27 @@ const styles = StyleSheet.create({
   },
   temp: {
     fontSize: 28,
+    margin: 20
+  },
+  hum: {
+    fontSize: 28,
     margin: 20,
+    marginRight: 0
+  },
+  icon: {
     textAlign: 'center'
+  },
+  humIcon: {
+    marginTop: 20,
+    marginLeft: -5,
+    textAlign: 'center'
+  },
+  description: {
+    fontSize: 18,
+    marginTop: 26
+  },
+  centeredRowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });
