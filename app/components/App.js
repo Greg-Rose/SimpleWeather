@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, RefreshControl, View } from 'react-native';
 import CurrentWeather from './CurrentWeather';
 import ForecastContainer from './ForecastContainer';
 
@@ -8,7 +8,8 @@ export default class App extends Component {
     super(props);
     this.state = {
       location: { lat: null, lon: null },
-      hasLocation: false
+      hasLocation: false,
+      refreshing: false
     };
   }
 
@@ -23,9 +24,15 @@ export default class App extends Component {
           lat: position.coords.latitude,
           lon: position.coords.longitude
         },
-        hasLocation: true
+        hasLocation: true,
+        refreshing: false
       });
     });
+  }
+
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.getLocation();
   }
 
   render() {
@@ -41,7 +48,16 @@ export default class App extends Component {
       <StatusBar
         barStyle="light-content"
       />
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+              tintColor="#fff"
+            />
+          }
+        >
           <View style={styles.titleContainer}>
             <Text style={styles.title}>SimpleWeather</Text>
           </View>

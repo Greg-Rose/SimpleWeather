@@ -5,8 +5,8 @@ import WeatherIcon from './WeatherIcon';
 import selectIcon from '../helpers/selectIcon';
 
 export default class CurrentWeather extends Component {
-  getCurrentWeather() {
-    fetch(`https://api.weatherbit.io/v2.0/current?units=I&lat=${this.props.location.lat}&lon=${this.props.location.lon}&key=${Config.WEATHERBIT_API_KEY}`)
+  getCurrentWeather(lat, lon) {
+    fetch(`https://api.weatherbit.io/v2.0/current?units=I&lat=${lat}&lon=${lon}&key=${Config.WEATHERBIT_API_KEY}`)
       .then(response => {
         if(response.ok) {
           return response;
@@ -31,7 +31,7 @@ export default class CurrentWeather extends Component {
   }
 
   componentWillMount() {
-    this.getCurrentWeather();
+    this.getCurrentWeather(this.props.location.lat, this.props.location.lon);
   }
 
   render() {

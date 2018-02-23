@@ -4,8 +4,8 @@ import Forecast from './Forecast';
 import Config from 'react-native-config';
 
 export default class ForecastContainer extends Component {
-  getForecast() {
-    fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&units=I&lat=${this.props.location.lat}&lon=${this.props.location.lon}&key=${Config.WEATHERBIT_API_KEY}`)
+  getForecast(lat, lon) {
+    fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&units=I&lat=${lat}&lon=${lon}&key=${Config.WEATHERBIT_API_KEY}`)
       .then(response => {
         if(response.ok) {
           return response;
@@ -23,7 +23,7 @@ export default class ForecastContainer extends Component {
   }
 
   componentWillMount() {
-    this.getForecast();
+    this.getForecast(this.props.location.lat, this.props.location.lon);
   }
 
   render() {
