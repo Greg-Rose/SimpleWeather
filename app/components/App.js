@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View } from 'react-native';
 import CurrentWeather from './CurrentWeather';
+import ForecastContainer from './ForecastContainer';
 
 export default class App extends Component {
   constructor(props) {
@@ -28,26 +29,29 @@ export default class App extends Component {
   }
 
   render() {
-    let currentWeather;
+    let currentWeather, forecast;
 
     if (this.state.hasLocation) {
       currentWeather = <CurrentWeather location={this.state.location} />;
+      forecast = <ForecastContainer location={this.state.location} />;
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>SimpleWeather</Text>
-        </View>
-        {currentWeather}
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>SimpleWeather</Text>
+          </View>
+          {currentWeather}
+          {forecast}
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
     paddingTop: 40
@@ -57,9 +61,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 10,
     fontSize: 38,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 10,
     textAlign: 'center',
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F5FCFF'
   }
 });
