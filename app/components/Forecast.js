@@ -14,7 +14,7 @@ export default class Forecast extends Component {
         <Text style={styles.text}>{days[date.getDay()]}</Text>
         <Text style={styles.text}>{Math.floor(this.props.data.max_temp)}°</Text>
         <Text style={styles.text}>{Math.floor(this.props.data.min_temp)}°</Text>
-        <WeatherIcon name={iconName} size={50} color="#000" />
+        <WeatherIcon name={iconName} size={50} color="#fff" />
       </View>
     );
   }
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   text: {
+    color: '#fff',
     marginBottom: 10
   }
 });

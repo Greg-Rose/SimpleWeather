@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, SafeAreaView, ScrollView, View } from 'react-native';
+import { StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, View } from 'react-native';
 import CurrentWeather from './CurrentWeather';
 import ForecastContainer from './ForecastContainer';
 
@@ -38,6 +38,9 @@ export default class App extends Component {
 
     return (
       <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+        barStyle="light-content"
+      />
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>SimpleWeather</Text>
@@ -53,14 +56,15 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#247BA0',
     paddingTop: 40
   },
   titleContainer: {
-    borderBottomColor: "#000",
+    borderBottomColor: "#fff",
     borderBottomWidth: 1
   },
   title: {
+    color: '#fff',
     fontSize: 38,
     paddingLeft: 20,
     paddingRight: 20,
@@ -69,6 +73,6 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#247BA0'
   }
 });

@@ -45,7 +45,7 @@ export default class CurrentWeather extends Component {
       humidity = (
         <View style={styles.centeredRowContainer}>
           <Text style={styles.hum}>{this.state.humidity}</Text>
-          <WeatherIcon name="wi-humidity" size={34} color="#000" style={styles.humIcon} />
+          <WeatherIcon name="wi-humidity" size={34} color="#fff" style={styles.humIcon} />
         </View>
       );
     }
@@ -58,7 +58,7 @@ export default class CurrentWeather extends Component {
           <Text style={styles.description}>{description}</Text>
           {humidity}
         </View>
-        <WeatherIcon name={iconName} size={150} color="#000" style={styles.icon} />
+        <WeatherIcon name={iconName} size={150} color="#fff" style={styles.icon} />
       </View>
     );
   }
@@ -66,15 +66,18 @@ export default class CurrentWeather extends Component {
 
 const styles = StyleSheet.create({
   location: {
+    color: '#fff',
     fontSize: 28,
     marginTop: 20,
     textAlign: 'center'
   },
   temp: {
+    color: '#fff',
     fontSize: 28,
     margin: 20
   },
   hum: {
+    color: '#fff',
     fontSize: 28,
     margin: 20,
     marginRight: 0
@@ -88,6 +91,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   description: {
+    color: '#fff',
     fontSize: 18,
     marginTop: 26
   },
