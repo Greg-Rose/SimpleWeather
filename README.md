@@ -2,7 +2,7 @@
 
 A simple weather app build using React Native.
 
-<img src="SimpleWeather screenshot.png" alt="Demo screenshot" style="width: 300px;"/>
+<img src="SimpleWeather screenshot.png" alt="Demo screenshot" width= "300px"/>
 
 ## Getting Started
 
