@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, RefreshControl, View } from 'react-native';
+import { AppState, StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, RefreshControl, View } from 'react-native';
 import CurrentWeather from './CurrentWeather';
 import ForecastContainer from './ForecastContainer';
 
@@ -12,12 +12,22 @@ export default class App extends Component {
       refreshing: false,
       message: false,
       updateWeather: false,
-      timestamp: 0
+      timestamp: 0,
+      appState: AppState.currentState
     };
+    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
   componentWillMount() {
     this.getLocation();
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   getLocation() {
@@ -57,6 +67,13 @@ export default class App extends Component {
     this.getLocation();
   }
 
+  _handleAppStateChange(nextAppState) {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.getLocation();
+    }
+    this.setState({ appState: nextAppState, updateWeather: false });
+  }
+
   render() {
     let currentWeather, forecast, message;
 
@@ -70,9 +87,9 @@ export default class App extends Component {
 
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="light-content"
-      />
+        <StatusBar
+          barStyle="light-content"
+        />
         <ScrollView
           contentContainerStyle={styles.container}
           refreshControl={
