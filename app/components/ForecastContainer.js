@@ -26,6 +26,12 @@ export default class ForecastContainer extends Component {
     this.getForecast(this.props.location.lat, this.props.location.lon);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.update) {
+      this.getForecast(nextProps.location.lat, nextProps.location.lon);
+    }
+  }
+
   render() {
     let forecast;
 

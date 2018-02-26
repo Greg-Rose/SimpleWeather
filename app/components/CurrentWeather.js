@@ -34,6 +34,12 @@ export default class CurrentWeather extends Component {
     this.getCurrentWeather(this.props.location.lat, this.props.location.lon);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.update) {
+      this.getCurrentWeather(nextProps.location.lat, nextProps.location.lon);
+    }
+  }
+
   render() {
     let location, temp, humidity, description, iconName;
 

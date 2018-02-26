@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, RefreshControl, View } from 'react-native';
+import { AppState, StyleSheet, StatusBar, Text, SafeAreaView, ScrollView, RefreshControl, View } from 'react-native';
 import CurrentWeather from './CurrentWeather';
 import ForecastContainer from './ForecastContainer';
 
@@ -9,45 +9,87 @@ export default class App extends Component {
     this.state = {
       location: { lat: null, lon: null },
       hasLocation: false,
-      refreshing: false
+      refreshing: false,
+      message: false,
+      updateWeather: false,
+      timestamp: 0,
+      appState: AppState.currentState
     };
+    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
   componentWillMount() {
     this.getLocation();
   }
 
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
   getLocation() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({
-        location: {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude
-        },
-        hasLocation: true,
-        refreshing: false
-      });
-    });
+    if (Date.now() > this.state.timestamp + 300000) {
+      let success = (position) => {
+        this.setState({
+          location: {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          },
+          timestamp: Date.now(),
+          hasLocation: true,
+          refreshing: false,
+          updateWeather: true
+        });
+      };
+
+      let error = () => {
+        this.setState({
+          message: true,
+          hasLocation: false,
+          refreshing: false,
+          timestamp: 0
+        });
+      };
+
+      let options = { enableHighAccuracy: true, maximumAge: 0 };
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    } else {
+      this.setState({ refreshing: false });
+    }
   }
 
   _onRefresh() {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true, updateWeather: false });
     this.getLocation();
   }
 
+  _handleAppStateChange(nextAppState) {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.getLocation();
+    }
+    this.setState({ appState: nextAppState, updateWeather: false });
+  }
+
   render() {
-    let currentWeather, forecast;
+    let currentWeather, forecast, message;
 
     if (this.state.hasLocation) {
-      currentWeather = <CurrentWeather location={this.state.location} />;
-      forecast = <ForecastContainer location={this.state.location} />;
+      currentWeather = <CurrentWeather location={this.state.location} update={this.state.updateWeather} />;
+      forecast = <ForecastContainer location={this.state.location} update={this.state.updateWeather} />;
+    }
+    else if (this.state.message) {
+      message = <Text style={styles.message}>We cannot get your location.</Text>
     }
 
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        barStyle="light-content"
-      />
+        <StatusBar
+          barStyle="light-content"
+        />
         <ScrollView
           contentContainerStyle={styles.container}
           refreshControl={
@@ -61,6 +103,7 @@ export default class App extends Component {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>SimpleWeather</Text>
           </View>
+          {message}
           {currentWeather}
           {forecast}
         </ScrollView>
@@ -73,7 +116,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: '#247BA0',
-    paddingTop: 40
+    paddingTop: 20
   },
   titleContainer: {
     borderBottomColor: "#fff",
@@ -85,6 +128,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingBottom: 10,
+    textAlign: 'center',
+  },
+  message: {
+    color: '#fff',
+    fontSize: 20,
+    padding: 20,
     textAlign: 'center',
   },
   safeArea: {
